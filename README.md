@@ -1,6 +1,11 @@
+## Api test
+To test api's user [Postman](https://www.getpostman.com/downloads/). It's free to use on Windows & MacOS.
+
+#
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+### Available Scripts
 
 In the project directory, you can run:
 
