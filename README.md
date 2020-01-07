@@ -1,3 +1,7 @@
+## Video
+`https://www.youtube.com/watch?v=TAcOTvQJH-U&list=PLMhAeHCz8S38ryyeMiBPPUnFAiWnoPvWP&index=14`
+19:11
+
 ## Api test
 To test api's user [Postman](https://www.getpostman.com/downloads/). It's free to use on Windows & MacOS.
 
