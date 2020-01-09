@@ -1,11 +1,33 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 
-function Login() {
+// MUI stuff
+import withStyles from "@material-ui/core/styles/withStyles";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+
+const styles = {
+    form: {
+        textAlign: 'center'
+    }
+}
+
+function Login(props) {
+
+    const { classes } = props
     return (
-        <div>
-            <h1>Login page</h1>
-        </div>
+        <Grid container className={classes.form}>
+            <Grid item sm/>
+            <Grid item sm>
+                <p>Hello</p>
+            </Grid>
+            <Grid item sm/>
+        </Grid>
     );
 }
 
-export default Login;
+Login.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(Login);
