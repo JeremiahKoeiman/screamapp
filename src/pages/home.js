@@ -15,7 +15,6 @@ function Home() {
     useEffect(() => {
         axios.get('/screams')
             .then(res => {
-                console.log(res.data)
                 setState({
                     screams: res.data
                 })
@@ -25,7 +24,7 @@ function Home() {
 
     let recentScreamsMarkup = state.screams ?
         (
-            state.screams.map(scream => <Scream scream={scream}/>)
+            state.screams.map(scream => <Scream key={scream.screamId} scream={scream}/>)
         ) : <p>Loading...</p>
 
     return (
