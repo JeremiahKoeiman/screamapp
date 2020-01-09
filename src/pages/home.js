@@ -1,10 +1,42 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from 'axios'
+import Grid from "@material-ui/core/Grid";
+
+import Scream from '../components/Scream'
+
+var initState = {
+    screams: null
+}
 
 function Home() {
+
+    const [state, setState] = useState(initState)
+
+    useEffect(() => {
+        axios.get('/screams')
+            .then(res => {
+                console.log(res.data)
+                setState({
+                    screams: res.data
+                })
+            })
+            .catch(err => console.log(err))
+    }, [])
+
+    let recentScreamsMarkup = state.screams ?
+        (
+            state.screams.map(scream => <Scream scream={scream}/>)
+        ) : <p>Loading...</p>
+
     return (
-        <div>
-            <h1>Home page</h1>
-        </div>
+        <Grid container spacing={10}>
+            <Grid item sm={8} xs={12}>
+                {recentScreamsMarkup}
+            </Grid>
+            <Grid item sm={4} xs={12}>
+                <p>Profile...</p>
+            </Grid>
+        </Grid>
     );
 }
 
