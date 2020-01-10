@@ -13,13 +13,15 @@ function Home() {
     const [state, setState] = useState(initState)
 
     useEffect(() => {
-        axios.get('/screams')
-            .then(res => {
-                setState({
-                    screams: res.data
+        return () => {
+            axios.get('/screams')
+                .then(res => {
+                    setState({
+                        screams: res.data
+                    })
                 })
-            })
-            .catch(err => console.log(err))
+                .catch(err => console.log(err))
+        }
     }, [])
 
     let recentScreamsMarkup = state.screams ?
