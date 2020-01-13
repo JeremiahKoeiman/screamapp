@@ -21,7 +21,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff"
 
 
 const styles = (theme) => ({
-    ...theme
+    ...theme.spreadThis
 })
 
 class Signup extends Component {
@@ -51,7 +51,6 @@ class Signup extends Component {
     }
 
     handleSubmit = (e) => {
-        //console.log(state) errors obj is empty
         e.preventDefault()
         this.setState({
             loading: true
@@ -64,6 +63,7 @@ class Signup extends Component {
             .post('/login', userData)
             .then((res) => {
                 console.log(res.data);
+                localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
                 this.setState({
                     loading: false
                 });
@@ -86,11 +86,9 @@ class Signup extends Component {
             <Grid container className={classes.form}>
                 <Grid item sm/>
                 <Grid item sm>
-                    <img src={Monkey} alt="Monkey image" className={classes.image}/>
-                    <Typography variant={"h2"} className={classes.pageTitle}>Login</Typography>
-                    <form onSubmit={this.handleSubmit}
-                          noValidate
-                    >
+                    <img src={Monkey} alt="Monkey" className={classes.image}/>
+                    <Typography variant={"h2"} className={classes.pageTitle}>Sign up</Typography>
+                    <form onSubmit={this.handleSubmit} noValidate>
                         <TextField
                             name={"email"}
                             label={"Email"}
@@ -127,6 +125,44 @@ class Signup extends Component {
                             <FormHelperText>{errors.password}</FormHelperText>
                         </FormControl>
 
+                        <FormControl error={errors.confirmPassword ? true : false} fullWidth>
+                            <InputLabel htmlFor={"confirmPassword"}>Confirm password</InputLabel>
+                            <Input
+                                className={classes.textField}
+                                id={"confirmPassword"}
+                                type={this.state.showPassword ? 'text' : 'password'}
+                                value={this.state.confirmPassword}
+                                name={"confirmPassword"}
+                                fullWidth
+                                onChange={this.handleChange}
+                                endAdornment={
+                                    <InputAdornment position={"end"}>
+                                        <IconButton
+                                            aria-label={"toggle password visibility"}
+                                            onClick={this.handleClickShowPassword}
+                                            onMouseDown={this.handleMouseDownPassword}
+                                        >
+                                            {this.state.showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                            <FormHelperText>{errors.confirmPassword}</FormHelperText>
+                        </FormControl>
+
+                        <TextField
+                            id={"handle"}
+                            name={"handle"}
+                            type={"text"}
+                            label={"Handle"}
+                            className={classes.textField}
+                            helperText={errors.handle}
+                            error={errors.handle ? true : false}
+                            value={this.state.handle}
+                            onChange={this.handleChange}
+                            fullWidth
+                        />
+
                         {errors.general && (
                             <Typography variant={"body2"} className={classes.customError}>
                                 {errors.general}
@@ -140,13 +176,13 @@ class Signup extends Component {
                             className={classes.button}
                             disabled={loading}
                         >
-                            Login
+                            Sign up
                             {loading && (
                                 <CircularProgress size={30} className={classes.progress}/>
                             )}
                         </Button>
                     </form>
-                    <small>Don't have an account yet? Sign up <Link to={"/signup"}>here</Link></small>
+                    <small>Already have an account? Login <Link to={"/login"}>here</Link></small>
                 </Grid>
                 <Grid item sm/>
             </Grid>
@@ -154,7 +190,7 @@ class Signup extends Component {
     }
 }
 
-Login.propTypes = {
+Signup.propTypes = {
     classes: PropTypes.object.isRequired
 }
 

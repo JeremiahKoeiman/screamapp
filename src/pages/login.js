@@ -21,7 +21,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff"
 
 
 const styles = (theme) => ({
-    ...theme
+    ...theme.spreadThis
 })
 
 class Login extends Component {
@@ -51,7 +51,6 @@ class Login extends Component {
     }
 
     handleSubmit = (e) => {
-        //console.log(state) errors obj is empty
         e.preventDefault()
         this.setState({
             loading: true
@@ -64,6 +63,7 @@ class Login extends Component {
             .post('/login', userData)
             .then((res) => {
                 console.log(res.data);
+                localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`)
                 this.setState({
                     loading: false
                 });
@@ -86,7 +86,7 @@ class Login extends Component {
             <Grid container className={classes.form}>
                 <Grid item sm/>
                 <Grid item sm>
-                    <img src={Monkey} alt="Monkey image" className={classes.image}/>
+                    <img src={Monkey} alt="Monkey" className={classes.image}/>
                     <Typography variant={"h2"} className={classes.pageTitle}>Login</Typography>
                     <form onSubmit={this.handleSubmit}
                           noValidate
