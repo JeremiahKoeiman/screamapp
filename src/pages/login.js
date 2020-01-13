@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Monkey from '../images/monkey.png'
 import axios from 'axios'
@@ -38,11 +38,48 @@ function Login(props) {
 
     const [state, setState] = useState({
         loading: false,
-        errors: {},
+        errors: {
+            email: '',
+            password: ''
+        },
         password: '',
         showPassword: false,
         email: ''
     })
+
+    useEffect(() => {
+        const abortController = new AbortController()
+
+        setState({
+            loading: true
+        })
+        const userData = {
+            email: state.email,
+            password: state.password
+        }
+        axios.post('/login', userData)
+            .then((res) => {
+                //console.log(state)
+                console.log(res.data)
+                setState({
+                    loading: false
+                })
+                // Redirect to homepage if login successful
+                props.history.push('/')
+            })
+            .catch(err => {
+                //console.log(err)
+                setState({
+                    errors: err.response.data,
+                    loading: false
+                })
+            })
+
+        return function cleanup() {
+            console.log(state)
+            abortController.abort()
+        }
+    }, [state.email, state.password, props.history])
 
     function handleClickShowPassword() {
         setState({...state, showPassword: !state.showPassword})
@@ -56,7 +93,7 @@ function Login(props) {
         setState({...state, [e.target.name]: e.target.value})
     }
 
-    function handleSubmit(e) {
+    /*function handleSubmit(e) {
         //console.log(state) errors obj is empty
         e.preventDefault()
         setState({
@@ -66,28 +103,29 @@ function Login(props) {
             email: state.email,
             password: state.password
         }
-        axios.post('login', userData)
-            .then(res => {
-                console.log(state)
-                //console.log(res.data)
+        axios.post('/login', userData)
+            .then((res) => {
+                //console.log(state)
+                console.log(res.data)
+                console.log(res.status)
+                console.log(res.statusText)
                 setState({
-                    ...state,
                     loading: false
                 })
                 // Redirect to homepage if login successful
                 props.history.push('/')
             })
-            .catch(err => {
-                console.log(err)
+            .catch((err) => {
+                //console.log(err)
                 setState({
                     errors: err.response.data,
                     loading: false
                 })
             })
-    }
+    }*/
 
     const {classes} = props
-    const {errors, loading} = state
+    const {errors, email, password} = state
 
     return (
         <Grid container className={classes.form}>
@@ -95,14 +133,16 @@ function Login(props) {
             <Grid item sm>
                 <img src={Monkey} alt="Monkey image" className={classes.image}/>
                 <Typography variant={"h2"} className={classes.pageTitle}>Login</Typography>
-                <form noValidate onSubmit={handleSubmit}>
+                <form //onSubmit={handleSubmit
+                    noValidate
+                    >
                     <TextField
                         name={"email"}
                         label={"Email"}
                         className={classes.textField}
-                        //helperText={errors.email}
-                        // error={errors.email ? true : false}
-                        value={state.email}
+                        /*helperText={errors.email}
+                        error={errors.email ? true : false}*/
+                        value={email}
                         onChange={handleChange}
                         fullWidth
                         autoFocus={true}
@@ -114,6 +154,8 @@ function Login(props) {
                             id={"password"}
                             type={state.showPassword ? 'text' : 'password'}
                             value={state.password}
+                            /*helperText={errors.password}
+                            error={errors.password ? true : false}*/
                             name={"password"}
                             fullWidth
                             onChange={handleChange}

@@ -13,14 +13,17 @@ function Home() {
     const [state, setState] = useState(initState)
 
     useEffect(() => {
-        return () => {
-            axios.get('/screams')
-                .then(res => {
-                    setState({
-                        screams: res.data
-                    })
+        const abortController = new AbortController()
+        axios.get('/screams')
+            .then(res => {
+                setState({
+                    screams: res.data
                 })
-                .catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
+
+        return () => {
+            abortController.abort()
         }
     }, [])
 
