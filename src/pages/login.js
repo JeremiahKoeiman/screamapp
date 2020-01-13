@@ -58,7 +58,7 @@ function Login(props) {
             password: state.password
         }
         axios.post('/login', userData)
-            .then((res) => {
+            .then(res => {
                 //console.log(state)
                 console.log(res.data)
                 setState({
@@ -75,8 +75,8 @@ function Login(props) {
                 })
             })
 
-        return function cleanup() {
-            console.log(state)
+        return () => {
+            console.log()
             abortController.abort()
         }
     }, [state.email, state.password, props.history])
@@ -93,7 +93,7 @@ function Login(props) {
         setState({...state, [e.target.name]: e.target.value})
     }
 
-    /*function handleSubmit(e) {
+    function handleSubmit(e) {
         //console.log(state) errors obj is empty
         e.preventDefault()
         setState({
@@ -122,20 +122,19 @@ function Login(props) {
                     loading: false
                 })
             })
-    }*/
+    }
 
     const {classes} = props
     const {errors, email, password} = state
 
+    console.log(email)
     return (
         <Grid container className={classes.form}>
             <Grid item sm/>
             <Grid item sm>
                 <img src={Monkey} alt="Monkey image" className={classes.image}/>
                 <Typography variant={"h2"} className={classes.pageTitle}>Login</Typography>
-                <form //onSubmit={handleSubmit
-                    noValidate
-                    >
+                <form onSubmit={handleSubmit}>
                     <TextField
                         name={"email"}
                         label={"Email"}
