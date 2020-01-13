@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Monkey from '../images/monkey.png'
 import axios from 'axios'
+import {Link} from "react-router-dom";
 // MUI stuff
 import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
@@ -13,8 +14,11 @@ import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Visibility from "@material-ui/icons/Visibility"
 import VisibilityOff from "@material-ui/icons/VisibilityOff"
+
 
 const styles = {
     form: {
@@ -30,155 +34,148 @@ const styles = {
         margin: '10px auto',
     },
     button: {
-        marginTop: 20
+        marginTop: 20,
+        position: 'relative'
+    },
+    customError: {
+        color: 'red',
+        fontSize: '0.8rem',
+        marginTop: 10
+    },
+    progress: {
+        position: 'absolute',
+
     }
 }
 
-function Login(props) {
-
-    const [state, setState] = useState({
-        loading: false,
-        errors: {
-            email: '',
-            password: ''
-        },
-        password: '',
-        showPassword: false,
-        email: ''
-    })
-
-    useEffect(() => {
-        const abortController = new AbortController()
-
-        setState({
-            loading: true
-        })
-        const userData = {
-            email: state.email,
-            password: state.password
+class Login extends Component {
+    constructor() {
+        super();
+        this.state = {
+            loading: false,
+            errors: {},
+            password: '',
+            showPassword: false,
+            email: ''
         }
-        axios.post('/login', userData)
-            .then(res => {
-                //console.log(state)
-                console.log(res.data)
-                setState({
-                    loading: false
-                })
-                // Redirect to homepage if login successful
-                props.history.push('/')
-            })
-            .catch(err => {
-                //console.log(err)
-                setState({
-                    errors: err.response.data,
-                    loading: false
-                })
-            })
-
-        return () => {
-            console.log()
-            abortController.abort()
-        }
-    }, [state.email, state.password, props.history])
-
-    function handleClickShowPassword() {
-        setState({...state, showPassword: !state.showPassword})
     }
 
-    function handleMouseDownPassword(e) {
+    handleClickShowPassword = () => {
+        this.setState({...this.state, showPassword: !this.state.showPassword})
+    }
+
+    handleMouseDownPassword = (e) => {
         e.preventDefault()
     }
 
-    function handleChange(e) {
-        setState({...state, [e.target.name]: e.target.value})
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
-    function handleSubmit(e) {
+    handleSubmit = (e) => {
         //console.log(state) errors obj is empty
         e.preventDefault()
-        setState({
+        this.setState({
             loading: true
-        })
+        });
         const userData = {
-            email: state.email,
-            password: state.password
-        }
-        axios.post('/login', userData)
+            email: this.state.email,
+            password: this.state.password
+        };
+        axios
+            .post('/login', userData)
             .then((res) => {
-                //console.log(state)
-                console.log(res.data)
-                console.log(res.status)
-                console.log(res.statusText)
-                setState({
+                console.log(res.data);
+                this.setState({
                     loading: false
-                })
+                });
                 // Redirect to homepage if login successful
-                props.history.push('/')
+                this.props.history.push('/');
             })
             .catch((err) => {
-                //console.log(err)
-                setState({
+                this.setState({
                     errors: err.response.data,
                     loading: false
                 })
             })
     }
 
-    const {classes} = props
-    const {errors, email, password} = state
+    render() {
+        const {classes} = this.props
+        const {errors, loading} = this.state
 
-    console.log(email)
-    return (
-        <Grid container className={classes.form}>
-            <Grid item sm/>
-            <Grid item sm>
-                <img src={Monkey} alt="Monkey image" className={classes.image}/>
-                <Typography variant={"h2"} className={classes.pageTitle}>Login</Typography>
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        name={"email"}
-                        label={"Email"}
-                        className={classes.textField}
-                        /*helperText={errors.email}
-                        error={errors.email ? true : false}*/
-                        value={email}
-                        onChange={handleChange}
-                        fullWidth
-                        autoFocus={true}
-                    />
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor={"password"}>Password</InputLabel>
-                        <Input
+        return (
+            <Grid container className={classes.form}>
+                <Grid item sm/>
+                <Grid item sm>
+                    <img src={Monkey} alt="Monkey image" className={classes.image}/>
+                    <Typography variant={"h2"} className={classes.pageTitle}>Login</Typography>
+                    <form onSubmit={this.handleSubmit}
+                          noValidate
+                    >
+                        <TextField
+                            name={"email"}
+                            label={"Email"}
                             className={classes.textField}
-                            id={"password"}
-                            type={state.showPassword ? 'text' : 'password'}
-                            value={state.password}
-                            /*helperText={errors.password}
-                            error={errors.password ? true : false}*/
-                            name={"password"}
+                            helperText={errors.email}
+                            error={errors.email ? true : false}
+                            value={this.state.email}
+                            onChange={this.handleChange}
                             fullWidth
-                            onChange={handleChange}
-                            endAdornment={
-                                <InputAdornment position={"end"}>
-                                    <IconButton
-                                        aria-label={"toggle password visibility"}
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                    >
-                                        {state.showPassword ? <Visibility/> : <VisibilityOff/>}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
+                            autoFocus={true}
                         />
-                    </FormControl>
+                        <FormControl error={errors.password ? true : false} fullWidth>
+                            <InputLabel htmlFor={"password"}>Password</InputLabel>
+                            <Input
+                                className={classes.textField}
+                                id={"password"}
+                                type={this.state.showPassword ? 'text' : 'password'}
+                                value={this.state.password}
+                                name={"password"}
+                                fullWidth
+                                onChange={this.handleChange}
+                                endAdornment={
+                                    <InputAdornment position={"end"}>
+                                        <IconButton
+                                            aria-label={"toggle password visibility"}
+                                            onClick={this.handleClickShowPassword}
+                                            onMouseDown={this.handleMouseDownPassword}
+                                        >
+                                            {this.state.showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                            <FormHelperText>{errors.password}</FormHelperText>
+                        </FormControl>
 
-                    <Button type={"submit"} variant={"contained"} color={"primary"}
-                            className={classes.button}>Login</Button>
-                </form>
+                        {errors.general && (
+                            <Typography variant={"body2"} className={classes.customError}>
+                                {errors.general}
+                            </Typography>
+                        )}
+
+                        <Button
+                            type={"submit"}
+                            variant={"contained"}
+                            color={"primary"}
+                            className={classes.button}
+                            disabled={loading}
+                        >
+                            Login
+                            {loading && (
+                                <CircularProgress size={30} className={classes.progress}/>
+                            )}
+                        </Button>
+                    </form>
+                    <small>Don't have an account yet? Sign up <Link to={"/signup"}>here</Link></small>
+                </Grid>
+                <Grid item sm/>
             </Grid>
-            <Grid item sm/>
-        </Grid>
-    );
+        );
+    }
 }
 
 Login.propTypes = {
