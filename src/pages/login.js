@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Monkey from '../images/monkey.png'
-import axios from 'axios'
 import {Link} from "react-router-dom";
+import {connect} from "react-redux";
+import {loginUser} from "../redux/actions/userActions";
 // MUI stuff
 import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
@@ -25,15 +26,17 @@ const styles = (theme) => ({
 })
 
 class Login extends Component {
-    constructor() {
-        super();
-        this.state = {
-            loading: false,
-            errors: {},
-            password: '',
-            showPassword: false,
-            email: ''
-        }
+
+    state = {
+        errors: {},
+        password: '',
+        showPassword: false,
+        email: ''
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.ui.errors)
+            this.setState({ errors: nextProps.ui.errors })
     }
 
     handleClickShowPassword = () => {
@@ -52,35 +55,16 @@ class Login extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        this.setState({
-            loading: true
-        });
         const userData = {
             email: this.state.email,
             password: this.state.password
         };
-        axios
-            .post('/login', userData)
-            .then((res) => {
-                console.log(res.data);
-                localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`)
-                this.setState({
-                    loading: false
-                });
-                // Redirect to homepage if login successful
-                this.props.history.push('/');
-            })
-            .catch((err) => {
-                this.setState({
-                    errors: err.response.data,
-                    loading: false
-                })
-            })
+        this.props.loginUser(userData, this.props.history)
     }
 
     render() {
-        const {classes} = this.props
-        const {errors, loading} = this.state
+        const {classes, ui: {loading}} = this.props
+        const {errors} = this.state
 
         return (
             <Grid container className={classes.form}>
@@ -155,7 +139,19 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    ui: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(Login);
+const mapStateToProps = (state) => ({
+    user: state.user,
+    ui: state.ui
+})
+
+const mapActionsToProps = {
+    loginUser
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Login));
