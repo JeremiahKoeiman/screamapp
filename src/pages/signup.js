@@ -31,13 +31,20 @@ class Signup extends Component {
             loading: false,
             errors: {},
             password: '',
+            confirmPassword: '',
             showPassword: false,
-            email: ''
+            showConfirmPassword: false,
+            email: '',
+            handle: ''
         }
     }
 
     handleClickShowPassword = () => {
         this.setState({...this.state, showPassword: !this.state.showPassword})
+    }
+
+    handleClickShowConfirmPassword = () => {
+        this.setState({...this.state, showConfirmPassword: !this.state.showConfirmPassword})
     }
 
     handleMouseDownPassword = (e) => {
@@ -55,12 +62,14 @@ class Signup extends Component {
         this.setState({
             loading: true
         });
-        const userData = {
+        const newUserData = {
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            confirmPassword: this.state.confirmPassword,
+            handle: this.state.handle
         };
         axios
-            .post('/login', userData)
+            .post('/signup', newUserData)
             .then((res) => {
                 console.log(res.data);
                 localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
@@ -130,7 +139,7 @@ class Signup extends Component {
                             <Input
                                 className={classes.textField}
                                 id={"confirmPassword"}
-                                type={this.state.showPassword ? 'text' : 'password'}
+                                type={this.state.showConfirmPassword ? 'text' : 'password'}
                                 value={this.state.confirmPassword}
                                 name={"confirmPassword"}
                                 fullWidth
@@ -139,10 +148,10 @@ class Signup extends Component {
                                     <InputAdornment position={"end"}>
                                         <IconButton
                                             aria-label={"toggle password visibility"}
-                                            onClick={this.handleClickShowPassword}
+                                            onClick={this.handleClickShowConfirmPassword}
                                             onMouseDown={this.handleMouseDownPassword}
                                         >
-                                            {this.state.showPassword ? <Visibility/> : <VisibilityOff/>}
+                                            {this.state.showConfirmPassword ? <Visibility/> : <VisibilityOff/>}
                                         </IconButton>
                                     </InputAdornment>
                                 }
