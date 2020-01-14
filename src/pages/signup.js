@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import Monkey from '../images/monkey.png'
 import axios from 'axios'
 import {Link} from "react-router-dom";
+// Redux
+import {connect} from "react-redux";
+import {logoutUser} from "../redux/actions/userActions";
 // MUI stuff
 import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
@@ -18,6 +21,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Visibility from "@material-ui/icons/Visibility"
 import VisibilityOff from "@material-ui/icons/VisibilityOff"
+import mapStateToProps from "react-redux/lib/connect/mapStateToProps";
 
 
 const styles = (theme) => ({
@@ -25,18 +29,15 @@ const styles = (theme) => ({
 })
 
 class Signup extends Component {
-    constructor() {
-        super();
-        this.state = {
-            loading: false,
-            errors: {},
-            password: '',
-            confirmPassword: '',
-            showPassword: false,
-            showConfirmPassword: false,
-            email: '',
-            handle: ''
-        }
+    state = {
+        loading: false,
+        errors: {},
+        password: '',
+        confirmPassword: '',
+        showPassword: false,
+        showConfirmPassword: false,
+        email: '',
+        handle: ''
     }
 
     handleClickShowPassword = () => {
@@ -68,23 +69,7 @@ class Signup extends Component {
             confirmPassword: this.state.confirmPassword,
             handle: this.state.handle
         };
-        axios
-            .post('/signup', newUserData)
-            .then((res) => {
-                console.log(res.data);
-                localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
-                this.setState({
-                    loading: false
-                });
-                // Redirect to homepage if login successful
-                this.props.history.push('/');
-            })
-            .catch((err) => {
-                this.setState({
-                    errors: err.response.data,
-                    loading: false
-                })
-            })
+        this.props.logoutUser(newUserData, this.props.history)
     }
 
     render() {
@@ -200,7 +185,15 @@ class Signup extends Component {
 }
 
 Signup.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+    ui: PropTypes.object.isRequired,
+    logoutUser: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(Signup);
+const mapStateToProps = (state) => ({
+    user: state.user,
+    ui: state.ui
+})
+
+export default connect(mapStateToProps, { logoutUser })(withStyles(styles)(Signup));
