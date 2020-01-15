@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import Monkey from '../images/monkey.png'
+import Monkey from '../images/monkey.png';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {loginUser} from "../redux/actions/userActions";
