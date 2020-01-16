@@ -21,7 +21,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Visibility from "@material-ui/icons/Visibility"
 import VisibilityOff from "@material-ui/icons/VisibilityOff"
 
-
 const styles = (theme) => ({
     ...theme.spreadThis
 })
