@@ -67,13 +67,13 @@ class Profile extends Component {
 
     render() {
         const {classes, user: {credentials: {createdAt, handle, imageUrl, bio, website, location}, loading, authenticated}} = this.props
-        let profileMarkup = !loading ? (authenticated ?
+        return !loading ? (authenticated ?
                 /*When authenticated, show profile*/
                 (
                     <Paper className={classes.paper} elevation={3}>
                         <div className={classes.profile}>
-                            <div className="profile-image">
-                                <img src={imageUrl} alt="Profile"/>
+                            <div className="image-wrapper">
+                                <img className={"profile-image"} src={imageUrl} alt="Profile"/>
                             </div>
                             <hr/>
                             <div className="profile-details">
@@ -111,10 +111,12 @@ class Profile extends Component {
                             No profile found, please login or sign up
                         </Typography>
                         <div className={classes.buttons}>
-                            <Button variant={"contained"} color={"primary"} component={Link}
-                                    to={"/login"}>Login</Button>
-                            <Button variant={"contained"} color={"secondary"} component={Link} to={"/signup"}>Sign
-                                up</Button>
+                            <Button variant={"contained"} color={"primary"} component={Link} to={"/login"}>
+                                Login
+                            </Button>
+                            <Button variant={"contained"} color={"secondary"} component={Link} to={"/signup"}>
+                                Sign up
+                            </Button>
                         </div>
                     </Paper>
                 )
@@ -122,8 +124,6 @@ class Profile extends Component {
             :
             /*When loading*/
             (<p>Loading...</p>)
-
-        return profileMarkup
     }
 
 }
