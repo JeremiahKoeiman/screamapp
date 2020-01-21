@@ -2,7 +2,7 @@ import {SET_USER, SET_ERRORS, CLEAR_ERRORS, LOADING_UI, SET_UNAUTHENTICATED, LOA
 import axios from "axios";
 
 export const loginUser = (userData, history) => (dispatch) => {
-    dispatch({ type: 'LOADING_UI' });
+    dispatch({ type: LOADING_UI });
     axios
         .post('/login', userData)
         .then((res) => {
@@ -21,7 +21,7 @@ export const loginUser = (userData, history) => (dispatch) => {
 }
 
 export const signupUser = (newUserData, history) => (dispatch) => {
-    dispatch({ type: 'LOADING_UI' });
+    dispatch({ type: LOADING_UI });
     axios
         .post('/signup', newUserData)
         .then((res) => {
@@ -54,6 +54,16 @@ export const getUserData = () => (dispatch) => {
                 payload: res.data
             })
             console.log(res.data)
+        })
+        .catch(err => console.log(err))
+}
+
+export const uploadImage = (formData) => (dispatch) => {
+    dispatch({ type: LOADING_USER });
+    axios.post('/user/image', formData)
+        .then(() => {
+            console.log('Received response')
+            dispatch(getUserData())
         })
         .catch(err => console.log(err))
 }
