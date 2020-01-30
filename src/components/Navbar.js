@@ -23,15 +23,15 @@ function Navbar(props) {
                         (
                             <Fragment>
                                 <MyButton tip={"Post a Scream!"}>
-                                    <AddIcon color={"primary"}/>
+                                    <AddIcon/>
                                 </MyButton>
                                 <MyButton tip={"Home"}>
                                     <Link to={'/'}>
-                                        <HomeIcon color={"primary"}/>
+                                        <HomeIcon/>
                                     </Link>
                                 </MyButton>
                                 <MyButton tip={"Notifications"}>
-                                    <NotificationsIcon color={"primary"}/>
+                                    <NotificationsIcon/>
                                 </MyButton>
                             </Fragment>
                         )
