@@ -1,6 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {Component} from 'react';
 import {connect} from "react-redux"
 import PropTypes from "prop-types"
+import axios from "axios"
 
 import Grid from "@material-ui/core/Grid";
 
@@ -9,29 +10,30 @@ import Profile from '../components/Profile'
 import { getScreams } from "../redux/actions/dataActions";
 
 
-function Home(props) {
+class Home extends Component{
+    componentDidMount() {
+       this.props.getScreams()
+    }
 
-    useEffect(() => {
-        props.getScreams()
-    }, [])
+    render() {
+        const { screams, loading } = this.props.data
 
-    const { screams, loading } = props.data
+        let recentScreamsMarkup = !loading ?
+            (
+                screams.map(scream => <Scream key={scream.screamId} scream={scream}/>)
+            ) : <p>Loading...</p>
 
-    let recentScreamsMarkup = !loading ?
-        (
-            screams.map(scream => <Scream key={scream.screamId} scream={scream}/>)
-        ) : <p>Loading...</p>
-
-    return (
-        <Grid container spacing={10}>
-            <Grid item sm={8} xs={12}>
-                {recentScreamsMarkup}
+        return (
+            <Grid container spacing={10}>
+                <Grid item sm={8} xs={12}>
+                    {recentScreamsMarkup}
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                    <Profile/>
+                </Grid>
             </Grid>
-            <Grid item sm={4} xs={12}>
-                <Profile/>
-            </Grid>
-        </Grid>
-    );
+        );
+    }
 }
 
 Home.propTypes = {

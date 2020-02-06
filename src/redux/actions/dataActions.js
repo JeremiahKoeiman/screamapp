@@ -16,8 +16,9 @@ export const getScreams = () => (dispatch) => {
         .catch(err => {
             dispatch({
                 type: SET_SCREAMS,
-                payload: {}
+                payload: []
             })
+            console.log(err)
         })
 }
 
@@ -30,6 +31,7 @@ export const likeScream = (screamId) => (dispatch) => {
                 type: LIKE_SCREAM,
                 payload: res.data
             })
+            console.log('Scream liked!')
         })
         .catch(err => console.log(err))
 }

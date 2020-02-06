@@ -34,21 +34,23 @@ const styles = {
 class Scream extends Component{
 
     likedScream = () => {
-        if (this.props.user.likes && this.props.user.likes.find((like) => like.screamId === this.props.scream.screamId))
+        if (this.props.user.likes && this.props.user.likes.find(like => like.screamId === this.props.scream.screamId))
             return true
         else
             return false
     }
 
     likeScream = () => {
-        this.likedScream(this.props.scream.screamId)
+        this.props.likeScream(this.props.scream.screamId)
     }
 
     unlikeScream = () => {
-        this.likedScream(this.props.scream.screamId)
+        this.props.unlikeScream(this.props.scream.screamId)
     }
 
     render() {
+        dayjs.extend(relativeTime)
+
         const {classes, scream: {body, createdAt, userImage, userHandle, screamId, likeCount, commentCount}, user: {authenticated}} = this.props
 
         const likeButton = !authenticated ?
@@ -74,8 +76,6 @@ class Scream extends Component{
                         </MyButton>
                     )
             )
-
-        dayjs.extend(relativeTime)
 
         return (
             <Card className={classes.card}>
