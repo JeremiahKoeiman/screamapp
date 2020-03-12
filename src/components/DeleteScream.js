@@ -38,7 +38,6 @@ function DeleteScream(props) {
     const deleteScream = () => {
         props.deleteScream(props.screamId)
         setState({open: false})
-        window.location.reload(true)
     }
 
     const {classes} = props
