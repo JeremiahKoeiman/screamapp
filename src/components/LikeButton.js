@@ -1,0 +1,72 @@
+import React, { Component } from 'react';
+import Proptyes from "prop-types"
+import MyButton from "../util/MyButton";
+import {Link} from "react-router-dom";
+import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import { connect } from "react-redux"
+import {likeScream, unlikeScream} from "../redux/actions/dataActions";
+
+class LikeButton extends Component{
+
+    likedScream = () => {
+        if (this.props.user.likes && this.props.user.likes.find(like => like.screamId === this.props.screamId))
+            return true
+        else
+            return false
+    }
+
+    likeScream = () => {
+        this.props.likeScream(this.props.scream.screamId)
+    }
+
+    unlikeScream = () => {
+        this.props.unlikeScream(this.props.scream.screamId)
+    }
+    render() {
+        const likeButton = !authenticated ?
+            (
+                <MyButton tip={"Like"}>
+                    <Link to={'/login'}>
+                        <FavoriteBorder color={"primary"}/>
+                    </Link>
+                </MyButton>
+            )
+            :
+            (
+                this.likedScream() ?
+                    (
+                        <MyButton tip={"Undo like"} onClick={this.unlikeScream}>
+                            <FavoriteIcon color={"primary"}/>
+                        </MyButton>
+                    )
+                    :
+                    (
+                        <MyButton tip={"Like"} onClick={this.likeScream}>
+                            <FavoriteBorder color={"primary"}/>
+                        </MyButton>
+                    )
+            )
+
+        return LikeButton
+    }
+};
+
+LikeButton.propTypes = {
+    user: Proptyes.object.isRequired,
+    screamId: Proptyes.string.isRequired,
+    likeScream: Proptyes.func.isRequired,
+    unlikeScream: Proptyes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    user: state.user
+})
+
+const mapActionToProps = {
+    likeScream,
+    unlikeScream
+}
+
+export default connect(mapStateToProps, mapActionToProps)(LikeButton);
+
