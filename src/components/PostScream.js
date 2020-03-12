@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import {connect} from "react-redux"
-import {postScream} from "../redux/actions/dataActions";
+import {postScream, clearErrors} from "../redux/actions/dataActions";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
@@ -47,9 +47,10 @@ class PostScream extends Component {
         }
         if (!nextProps.UI.errors && !nextProps.UI.loading) {
             this.setState({
-                body: ''
+                body: '',
+                open: false,
+                errors: {}
             })
-            this.handleClose()
         }
     }
 
@@ -58,6 +59,7 @@ class PostScream extends Component {
     }
 
     handleClose = () => {
+        this.props.clearErrors()
         this.setState({open: false, errors: {} })
     }
 
@@ -120,11 +122,12 @@ class PostScream extends Component {
 
 PostScream.propTypes = {
     postScream: PropTypes.func.isRequired,
-    UI: PropTypes.object.isRequired
+    UI: PropTypes.object.isRequired,
+    clearErrors: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
     UI: state.ui
 })
 
-export default connect(mapStateToProps, {postScream})(withStyles(styles)(PostScream));
+export default connect(mapStateToProps, {postScream, clearErrors})(withStyles(styles)(PostScream));
