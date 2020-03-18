@@ -2,14 +2,14 @@ import React, {Fragment} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import MyButton from "../util/MyButton";
+import MyButton from "../../util/MyButton";
 // Material-ui
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import HomeIcon from "@material-ui/icons/Home";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import PostScream from "./PostScream";
+import PostScream from "../scream/PostScream";
 
 function Navbar(props) {
     const {authenticated} = props
